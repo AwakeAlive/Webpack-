@@ -134,3 +134,15 @@ function foo(one, two, three) {}
 ```
 往源码里加入静态类型后重新构建项目，你会发现采用了 Flow 的源码还是能正常在浏览器中运行。
 要明确构建的目的只是为了去除源码中的 Flow 静态类型语法，而代码检查和构建无关。 许多编辑器已经整合 Flow，可以实时在代码中高亮指出 Flow 检查出的问题。
+添加.flowconfig文件
+```js
+[ignore]
+
+[include]
+
+[libs]
+
+[lints]
+
+[options]
+```
