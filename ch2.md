@@ -301,3 +301,68 @@ TypeScript 相比于 Babel 的优点在于它原生支持 JSX 语法，你不需
 * 使用了 JSX 语法的文件后缀必须是 tsx。
 * 由于 React 不是采用 TypeScript 编写的，需要安装 react 和 react-dom 对应的 TypeScript 接口描述模块 @types/react 和 @types/react-dom 后才能通过编译。
 [具体TypeScript配置](http://webpack.wuhaolin.cn/3%E5%AE%9E%E6%88%98/3-6%E4%BD%BF%E7%94%A8React%E6%A1%86%E6%9E%B6.html)
+## 使用Vue框架
+Vue是一个渐进式的MVVM框架，Vue和React一样，它们都推崇组件化和由数据驱动视图的思想，数据和视图绑定在一起，数据改变，视图会跟着改变，而无需直接操作视图。
+`App.vue`文件代表一个单文件组件，它是项目唯一的组件，也是根组件。
+```js
+<!--渲染模板-->
+<template>
+  <h1>{{ msg }}</h1>
+</template>
+
+<!--样式描述-->
+<style scoped>
+  h1 {
+    color: red;
+  }
+</style>
+
+<!--组件逻辑-->
+<script>
+  export default {
+    data() {
+      return {
+        msg: 'Hello, Webpack'
+      }
+    }
+  }
+</script>
+```
+Vue的单文件组件通过一个类似HTML文件的`.vue`文件就能描述清楚一个组件所需的模板，样式，逻辑。
+`main.js`入口文件
+```js
+import Vue from 'vue'
+import App from './App.vue'
+
+new Vue({
+  el: '#app',
+  render: h => h(App)
+});
+```
+入口文件创建一个 Vue 的根实例，在 ID 为 `app` 的 DOM 节点上渲染出上面定义的 App 组件。
+### 接入Webpack
+开发Vue项目方式采用ES6加Babel转换，差别在于解析`.vue`格式的单文件组件。好在Vue官方提供对应的`vue-loader`可以方便完成单文件组件的转换。
+修改Webpack相关配置如下：
+```js
+module: {
+  rules: [
+    {
+      test: /\.vue$/,
+      use: ['vue-loader'],
+    },
+  ]
+}
+```
+安装新的依赖：
+```js
+# Vue 框架运行需要的库
+npm i -S vue
+# 构建所需的依赖
+npm i -D vue-loader css-loader vue-template-compiler
+```
+在这些依赖中，它们作用分别是：
+* `vue-loader`: 解析和转换 `.vue` 文件，提取出其中的逻辑代码 `script`、样式代码 `style`、以及 HTML 模版 `template`，再分别把它们交给对应的 Loader 去处理。
+* `css-loader`: 加载 `vue-loader` 提取出的CSS代码
+* `vue-template-compiler`: 把 `vue-loader` 提取出的 HTML 模版编译成对应的可执行的 JavaScript 代码，这和 React 中的 JSX 语法被编译成 JavaScript 代码类似。预先编译好 HTML 模版相对于在浏览器中再去编译 HTML 模版的好处在于性能更好。
+
+[使用TypeScript编写Vue应用](http://webpack.wuhaolin.cn/3%E5%AE%9E%E6%88%98/3-7%E4%BD%BF%E7%94%A8Vue%E6%A1%86%E6%9E%B6.html)
