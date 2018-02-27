@@ -247,3 +247,57 @@ npm i -D postcss-loader css-loader style-loader
 # 根据你使用的特性安装对应的 PostCSS 插件依赖
 npm i -D postcss-cssnext
 ```
+## 使用React框架
+使用了 React 项目的代码特征有 JSX 和 Class 语法，例如：
+```js
+class Button extends Component {
+  render() {
+    return <h1>Hello, Webpack</h1>
+  }
+}
+```
+>在使用了 React 的项目里 JSX 和 Class 语法并不是必须的，但使用新语法写出的代码看上去更优雅。
+其中 JSX 语法是无法在任何现有的 JavaScript 引擎中运行的，所以在构建过程中需要把源码转换成可以运行的代码，例如：
+```js
+// 原JSX语法代码
+return <h1>Hello, Webpack</h1>
+
+// 被转换成正常的JavaScript代码
+return React.createElement('h1', null, 'Hello, Webpack')
+```
+目前 Babel 和 TypeScript 都提供了对 React 语法的支持，下面分别来介绍如何在使用 Babel 或 TypeScript 的项目中接入 React 框架。
+### React 与Babel
+要在使用 Babel 的项目中接入 React 框架是很简单的，只需要加入 React 所依赖的 Presets [babel-preset-react](https://babeljs.io/docs/plugins/preset-react/)。 接下来通过修改前面讲过的3-1 使用 ES6 语言中的项目，为其接入 React 框架。
+```js
+# 安装 React 基础依赖
+npm i -D react react-dom
+# 安装 babel 完成语法转换所需依赖
+npm i -D babel-preset-react
+```
+安装新的依赖后，需要修改`.babelrc`配置文件加入 React Presets
+```js
+"presets": [
+  "react"
+],
+```
+再修改`main.js`文件如下：
+```js
+import * as React from 'react'
+import { Component } from 'react'
+import { render } from 'react-dom'
+
+class Button extends Component {
+  render() {
+    return <h1>Hello, Webpack</h1>
+  }
+}
+
+render(<Button />, window.document.getElementById('app'));
+
+```
+
+### 使用TypeScript与React
+TypeScript 相比于 Babel 的优点在于它原生支持 JSX 语法，你不需要重新安装新的依赖，只需修改一行配置。 但 TypeScript 的不同在于：
+* 使用了 JSX 语法的文件后缀必须是 tsx。
+* 由于 React 不是采用 TypeScript 编写的，需要安装 react 和 react-dom 对应的 TypeScript 接口描述模块 @types/react 和 @types/react-dom 后才能通过编译。
+[具体TypeScript配置](http://webpack.wuhaolin.cn/3%E5%AE%9E%E6%88%98/3-6%E4%BD%BF%E7%94%A8React%E6%A1%86%E6%9E%B6.html)
